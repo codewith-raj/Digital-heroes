@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, Trophy, Heart, Users, TrendingUp, ChevronDown, Star, Check, Play } from 'lucide-react';
+import { ArrowRight, Trophy, Heart, Users, TrendingUp, ChevronDown, Star, Check, Play, LayoutDashboard } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
+import { useAuth } from '../hooks/useAuth.jsx';
 
 // ── Animated counter ────────────────────────────────────────
 function AnimatedCounter({ target, prefix = '', suffix = '', duration = 2000 }) {
@@ -69,6 +70,7 @@ const stagger = {
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const faqs = [
     {
@@ -143,10 +145,17 @@ export default function Landing() {
               </motion.p>
 
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 mb-12">
-                <Link to="/signup" className="btn-primary text-base px-8 py-4">
-                  Join Now — ₹499/mo
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
+                {user ? (
+                  <Link to="/dashboard" className="btn-primary text-base px-8 py-4">
+                    <LayoutDashboard className="w-5 h-5" />
+                    Go to Dashboard
+                  </Link>
+                ) : (
+                  <Link to="/signup" className="btn-primary text-base px-8 py-4">
+                    Join Now — ₹499/mo
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+                )}
                 <Link to="/charities" className="btn-secondary text-base px-8 py-4">
                   <Heart className="w-5 h-5" />
                   See Charities
@@ -470,9 +479,16 @@ export default function Landing() {
                 </li>
               ))}
             </ul>
-            <Link to="/signup?plan=monthly" className="btn-secondary w-full justify-center">
-              Get Started
-            </Link>
+            {user ? (
+              <Link to="/dashboard" className="btn-secondary w-full justify-center">
+                <LayoutDashboard className="w-4 h-4" />
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link to="/signup?plan=monthly" className="btn-secondary w-full justify-center">
+                Get Started
+              </Link>
+            )}
           </motion.div>
 
           {/* Yearly */}
@@ -541,10 +557,17 @@ export default function Landing() {
               Join 2,400+ members who play golf, win prizes, and fund charities every month.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link to="/signup" className="btn-amber text-base px-10 py-4">
-                Start Playing Today
-                <ArrowRight className="w-5 h-5" />
-              </Link>
+              {user ? (
+                <Link to="/dashboard" className="btn-amber text-base px-10 py-4">
+                  <LayoutDashboard className="w-5 h-5" />
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link to="/signup" className="btn-amber text-base px-10 py-4">
+                  Start Playing Today
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              )}
               <Link to="/charities" className="btn-secondary text-base px-10 py-4">
                 <Heart className="w-5 h-5" />
                 Explore Charities
