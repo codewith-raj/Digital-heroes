@@ -74,7 +74,7 @@ export default function AdminLayout({ children, title, subtitle }) {
         {/* Nav links */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {links.map(({ to, label, icon: Icon, exact }) => {
-            const active = exact ? location.pathname === to : location.pathname === to;
+            const active = isActive({ to, exact });
             return (
               <Link
                 key={to}

@@ -22,6 +22,16 @@ import AdminDraws from './pages/admin/AdminDraws.jsx';
 import AdminCharities from './pages/admin/AdminCharities.jsx';
 import AdminWinners from './pages/admin/AdminWinners.jsx';
 
+// Guard: redirect already-logged-in admins away from /admin/login
+function AdminLoginGuard() {
+  const { user, profile, loading } = useAuth();
+  // Still resolving — render the login page (it'll redirect once resolved)
+  if (loading) return null;
+  // Already authenticated as admin → go straight to dashboard
+  if (user && profile?.role === 'admin') return <Navigate to="/admin" replace />;
+  return <AdminLogin />;
+}
+
 function AppRoutes() {
   const { user, loading } = useAuth();
 
@@ -46,7 +56,7 @@ function AppRoutes() {
       <Route path="/charities/:id" element={<CharityProfile />} />
       <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/login" element={<AdminLoginGuard />} />
 
       {/* Protected — requires auth */}
       <Route element={<ProtectedRoute />}>
