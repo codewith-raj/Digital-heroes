@@ -135,7 +135,7 @@
 
   /* Section padding */
   .section-py {
-    @apply py-20 lg:py-28;
+    @apply py-12 sm:py-20 lg:py-28;
   }
 
   /* Card */

@@ -66,12 +66,12 @@ export default function Signup() {
         className="w-full max-w-lg"
       >
         {/* Logo */}
-        <Link to="/" className="flex items-center mb-10">
+        <Link to="/" className="flex items-center mb-6 sm:mb-10">
           <Logo size="lg" />
         </Link>
 
         {/* Progress */}
-        <div className="flex items-center gap-3 mb-10">
+        <div className="flex items-center gap-3 mb-6 sm:mb-10">
           {steps.map((s, i) => (
             <div key={s} className="flex-1 flex flex-col gap-1">
               <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export default function Signup() {
               <h2 className="text-3xl font-bold font-display text-white mb-1">Choose your plan</h2>
               <p className="text-slate-400">You can change or cancel anytime.</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { value: 'monthly', label: 'Monthly', price: '₹499', per: 'per month', badge: null },
                 { value: 'yearly', label: 'Yearly', price: '₹4,999', per: 'per year', badge: 'SAVE ₹989' },

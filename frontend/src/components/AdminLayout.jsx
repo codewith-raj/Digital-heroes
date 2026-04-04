@@ -63,16 +63,17 @@ export default function AdminLayout({ children, title, subtitle }) {
       {/* Main content */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Top bar - mobile */}
-        <header className="sticky top-0 z-20 bg-navy-950/80 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center gap-4 lg:hidden">
-          <button onClick={() => setSidebarOpen(true)} className="text-slate-400 hover:text-white">
+        <header className="sticky top-0 z-20 bg-navy-950/80 backdrop-blur-md border-b border-white/5 px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-4 lg:hidden">
+          <button onClick={() => setSidebarOpen(true)} className="text-slate-400 hover:text-white shrink-0">
             <Menu className="w-6 h-6" />
           </button>
-          <div className="flex-1">
-            <h1 className="text-white font-bold text-sm">{title || 'Admin'}</h1>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-white font-bold text-sm truncate">{title || 'Admin'}</h1>
+            {subtitle && <p className="text-slate-400 text-xs truncate">{subtitle}</p>}
           </div>
         </header>
 
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 overflow-y-auto">
           {(title || subtitle) && (
             <div className="mb-6 hidden lg:block">
               {title && <h1 className="text-2xl font-bold font-display text-white">{title}</h1>}

@@ -116,15 +116,15 @@ export default function Landing() {
       <Navbar />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center pt-20">
+      <section className="relative min-h-screen flex items-center pt-16 sm:pt-20">
         {/* Background layers */}
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-grid opacity-40" />
         <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
 
-        <div className="section relative z-10 py-20 w-full">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="section relative z-10 py-10 sm:py-16 lg:py-20 w-full">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
 
             {/* Left */}
             <motion.div variants={stagger} initial="hidden" animate="show">
@@ -134,13 +134,13 @@ export default function Landing() {
                 </span>
               </motion.div>
 
-              <motion.h1 variants={fadeUp} className="text-5xl lg:text-7xl font-bold font-display leading-tight text-white mb-6">
+              <motion.h1 variants={fadeUp} className="text-3xl sm:text-5xl lg:text-7xl font-bold font-display leading-tight text-white mb-4 sm:mb-6">
                 Play Golf.<br />
                 <span className="gradient-text">Win Big.</span><br />
                 <span className="gradient-text-amber">Change Lives.</span>
               </motion.h1>
 
-              <motion.p variants={fadeUp} className="text-lg text-slate-400 mb-10 max-w-lg leading-relaxed">
+              <motion.p variants={fadeUp} className="text-base sm:text-lg text-slate-400 mb-6 sm:mb-10 max-w-lg leading-relaxed">
                 Subscribe monthly, enter your golf scores, and participate in prize draws — while automatically supporting charities that matter to you.
               </motion.p>
 
@@ -162,17 +162,17 @@ export default function Landing() {
                 </Link>
               </motion.div>
 
-              <motion.div variants={fadeUp} className="flex items-center gap-0 divide-x divide-white/10">
+              <motion.div variants={fadeUp} className="grid grid-cols-3 gap-0 divide-x divide-white/10">
                 {[
-                  { label: 'Total Donated', value: 14200000, prefix: '₹', suffix: '+', format: true },
+                  { label: 'Total Donated', value: 14200000, prefix: '₹', suffix: '+' },
                   { label: 'Prize Pool', value: 520000, prefix: '₹', suffix: '' },
                   { label: 'Members', value: 2400, prefix: '', suffix: '+' },
                 ].map(({ label, value, prefix, suffix }, i) => (
-                  <div key={label} className={`flex-1 ${i === 0 ? 'pr-8' : i === 2 ? 'pl-8' : 'px-8'}`}>
-                    <div className="stat-value text-2xl lg:text-3xl">
+                  <div key={label} className={`${i === 0 ? 'pr-3 sm:pr-8' : i === 2 ? 'pl-3 sm:pl-8' : 'px-3 sm:px-8'}`}>
+                    <div className="text-xl sm:text-2xl lg:text-3xl font-bold font-display text-white">
                       <AnimatedCounter target={value} prefix={prefix} suffix={suffix} />
                     </div>
-                    <div className="stat-label">{label}</div>
+                    <div className="text-xs sm:text-sm text-slate-400 mt-1">{label}</div>
                   </div>
                 ))}
               </motion.div>
@@ -247,10 +247,10 @@ export default function Landing() {
               <motion.div
                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="absolute -top-4 -right-4 glass px-4 py-2 flex items-center gap-2"
+                className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 glass px-3 py-1.5 sm:px-4 sm:py-2 flex items-center gap-2"
               >
                 <span className="text-amber-400">🔔</span>
-                <span className="text-sm font-medium">Draw in 12 days</span>
+                <span className="text-xs sm:text-sm font-medium">Draw in 12 days</span>
               </motion.div>
             </motion.div>
           </div>
@@ -364,7 +364,7 @@ export default function Landing() {
 
       {/* ── Prize breakdown ───────────────────────────────────── */}
       <section className="section section-py border-t border-white/5">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -411,7 +411,7 @@ export default function Landing() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="glass p-8"
+            className="glass p-5 sm:p-8"
           >
             <h3 className="text-xl font-bold text-white mb-6">Example with 2,000 Members</h3>
             <div className="space-y-4">
@@ -532,7 +532,7 @@ export default function Landing() {
             <p className="text-teal-400 font-semibold text-sm uppercase tracking-widest mb-3">FAQ</p>
             <h2 className="text-4xl font-bold font-display text-white">Common Questions</h2>
           </div>
-          <div className="glass p-8">
+          <div className="glass p-4 sm:p-8">
             {faqs.map((faq) => (
               <FAQItem key={faq.question} {...faq} />
             ))}
@@ -541,19 +541,19 @@ export default function Landing() {
       </section>
 
       {/* ── CTA ───────────────────────────────────────────────── */}
-      <section className="section py-24 border-t border-white/5">
+      <section className="section py-12 sm:py-24 border-t border-white/5">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="glass p-12 lg:p-20 text-center relative overflow-hidden"
+          className="glass p-6 sm:p-12 lg:p-20 text-center relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 via-transparent to-amber-500/10" />
           <div className="relative z-10">
-            <h2 className="text-4xl lg:text-6xl font-bold font-display text-white mb-6">
+            <h2 className="text-2xl sm:text-4xl lg:text-6xl font-bold font-display text-white mb-4 sm:mb-6">
               Ready to Make a Difference?
             </h2>
-            <p className="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
+            <p className="text-slate-400 text-base sm:text-lg mb-6 sm:mb-10 max-w-xl mx-auto">
               Join 2,400+ members who play golf, win prizes, and fund charities every month.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">

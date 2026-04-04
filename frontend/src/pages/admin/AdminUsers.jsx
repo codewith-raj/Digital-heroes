@@ -69,8 +69,8 @@ export default function AdminUsers() {
         </div>
 
         {/* Users table */}
-        <div className="table-container">
-          <table className="w-full">
+        <div className="table-container overflow-x-auto">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr>
                 {['Name', 'Email', 'Status', 'Plan', 'Charity %', 'Joined', 'Actions'].map(h => (

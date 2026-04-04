@@ -80,17 +80,17 @@ function OverviewTab({ profile, subStatus }) {
       </div>
 
       {/* Quick links */}
-      <div className="glass p-6">
+      <div className="glass p-4 sm:p-6">
         <h3 className="text-white font-bold mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
           {[
             { label: 'Enter a Score', to: '?tab=scores', icon: '⛳', color: 'border-teal-500/30 hover:bg-teal-500/5' },
             { label: 'View Draws', to: '?tab=draws', icon: '🎯', color: 'border-amber-500/30 hover:bg-amber-500/5' },
             { label: 'My Charity', to: '?tab=charity', icon: '💚', color: 'border-green-500/30 hover:bg-green-500/5' },
             { label: 'My Winnings', to: '?tab=winnings', icon: '🏆', color: 'border-purple-500/30 hover:bg-purple-500/5' },
           ].map(({ label, to, icon, color }) => (
-            <Link key={label} to={to} className={`glass p-4 flex items-center gap-3 text-slate-300 hover:text-white transition-all duration-200 ${color}`}>
-              <span className="text-2xl">{icon}</span>
+            <Link key={label} to={to} className={`glass p-3 sm:p-4 flex items-center gap-3 text-slate-300 hover:text-white transition-all duration-200 ${color}`}>
+              <span className="text-xl sm:text-2xl">{icon}</span>
               <span className="font-medium text-sm">{label}</span>
               <ChevronRight className="w-4 h-4 ml-auto text-slate-500" />
             </Link>
@@ -699,7 +699,7 @@ export default function Dashboard() {
         </header>
 
         {/* Tab content */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-6 overflow-y-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

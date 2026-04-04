@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-navy-950 flex">
       {/* Left: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-16">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-10 sm:py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
