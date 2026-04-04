@@ -162,13 +162,13 @@ export default function Landing() {
                 </Link>
               </motion.div>
 
-              <motion.div variants={fadeUp} className="grid grid-cols-3 gap-0 divide-x divide-white/10">
+              <motion.div variants={fadeUp} className="grid grid-cols-3 gap-4 sm:gap-8 divide-x divide-white/10">
                 {[
                   { label: 'Total Donated', value: 14200000, prefix: '₹', suffix: '+' },
                   { label: 'Prize Pool', value: 520000, prefix: '₹', suffix: '' },
                   { label: 'Members', value: 2400, prefix: '', suffix: '+' },
                 ].map(({ label, value, prefix, suffix }, i) => (
-                  <div key={label} className={`${i === 0 ? 'pr-4 sm:pr-10 lg:pr-12' : i === 2 ? 'pl-4 sm:pl-10 lg:pl-12' : 'px-4 sm:px-10 lg:px-12'}`}>
+                  <div key={label} className={`${i === 0 ? 'pr-4 sm:pr-8 lg:pr-10' : i === 2 ? 'pl-4 sm:pl-8 lg:pl-10' : 'px-4 sm:px-8 lg:px-10'}`}>
                     <div className="text-xl sm:text-2xl lg:text-3xl font-bold font-display text-white">
                       <AnimatedCounter target={value} prefix={prefix} suffix={suffix} />
                     </div>
