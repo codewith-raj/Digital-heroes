@@ -1,0 +1,270 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base ─────────────────────────────────────────────────── */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-navy-950 text-slate-100 font-sans;
+    min-height: 100vh;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-navy-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-teal-700 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-teal-500;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-teal-500/30 text-teal-200;
+  }
+}
+
+/* ── Components ───────────────────────────────────────────── */
+@layer components {
+
+  /* Glass card */
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl;
+  }
+
+  .glass-dark {
+    @apply bg-black/30 backdrop-blur-md border border-white/10 rounded-2xl;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-teal-500 hover:bg-teal-400 text-navy-950
+           font-semibold px-6 py-3 rounded-xl
+           transition-all duration-200 active:scale-95
+           shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40;
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-white/10 hover:bg-white/20 text-slate-100
+           font-semibold px-6 py-3 rounded-xl border border-white/20
+           transition-all duration-200 active:scale-95;
+  }
+
+  /* Amber / CTA button */
+  .btn-amber {
+    @apply inline-flex items-center justify-center gap-2
+           bg-amber-400 hover:bg-amber-300 text-navy-950
+           font-semibold px-6 py-3 rounded-xl
+           transition-all duration-200 active:scale-95
+           shadow-lg shadow-amber-500/25;
+  }
+
+  /* Danger button */
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2
+           bg-red-500/20 hover:bg-red-500/30 text-red-400
+           font-semibold px-6 py-3 rounded-xl border border-red-500/30
+           transition-all duration-200 active:scale-95;
+  }
+
+  /* Input */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl
+           bg-white/5 border border-white/15 text-slate-100
+           placeholder-slate-500
+           focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50
+           transition-all duration-200;
+  }
+
+  /* Label */
+  .label {
+    @apply block text-sm font-medium text-slate-400 mb-1.5;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1.5 text-xs font-semibold
+           px-3 py-1 rounded-full;
+  }
+
+  .badge-teal {
+    @apply badge bg-teal-500/20 text-teal-400 border border-teal-500/30;
+  }
+
+  .badge-amber {
+    @apply badge bg-amber-500/20 text-amber-400 border border-amber-500/30;
+  }
+
+  .badge-green {
+    @apply badge bg-green-500/20 text-green-400 border border-green-500/30;
+  }
+
+  .badge-red {
+    @apply badge bg-red-500/20 text-red-400 border border-red-500/30;
+  }
+
+  .badge-slate {
+    @apply badge bg-slate-500/20 text-slate-400 border border-slate-500/30;
+  }
+
+  /* Section container */
+  .section {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section padding */
+  .section-py {
+    @apply py-20 lg:py-28;
+  }
+
+  /* Card */
+  .card {
+    @apply glass p-6 hover:border-white/20 transition-all duration-300;
+  }
+
+  /* Stat cell */
+  .stat-value {
+    @apply text-3xl lg:text-4xl font-bold font-display text-white;
+  }
+
+  .stat-label {
+    @apply text-sm text-slate-400 mt-1;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-teal-400 to-teal-200 bg-clip-text text-transparent;
+  }
+
+  .gradient-text-amber {
+    @apply bg-gradient-to-r from-amber-400 to-amber-200 bg-clip-text text-transparent;
+  }
+
+  /* Sidebar item */
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl
+           text-slate-400 hover:text-slate-100 hover:bg-white/5
+           transition-all duration-200 cursor-pointer font-medium;
+  }
+
+  .sidebar-item-active {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl
+           text-teal-400 bg-teal-500/10 border border-teal-500/20 font-semibold;
+  }
+
+  /* Table */
+  .table-container {
+    @apply glass overflow-hidden;
+  }
+
+  .table-head {
+    @apply text-left text-xs font-semibold text-slate-400 uppercase tracking-wider
+           px-4 py-3 bg-white/5;
+  }
+
+  .table-row {
+    @apply border-t border-white/5 hover:bg-white/5 transition-colors duration-150;
+  }
+
+  .table-cell {
+    @apply px-4 py-3 text-sm text-slate-300;
+  }
+
+  /* Score ball */
+  .score-ball {
+    @apply w-12 h-12 rounded-full flex items-center justify-center
+           font-bold text-sm font-display;
+  }
+
+  /* Draw number */
+  .draw-number {
+    @apply w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold;
+  }
+}
+
+/* ── Utilities ────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(rgba(0,212,170,0.15) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  /* Glow effects */
+  .glow-teal {
+    box-shadow: 0 0 30px rgba(0, 212, 170, 0.3);
+  }
+
+  .glow-amber {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
+  }
+
+  /* Gradient borders */
+  .border-gradient-teal {
+    border: 1px solid transparent;
+    background: linear-gradient(#0a0f1e, #0a0f1e) padding-box,
+                linear-gradient(135deg, #00d4aa, #00d4aa00) border-box;
+  }
+}
+
+/* ── Page transition ──────────────────────────────────────── */
+.page-enter {
+  animation: slideUp 0.35s ease-out;
+}
+
+/* ── Loading spinner ──────────────────────────────────────── */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(0, 212, 170, 0.2);
+  border-top-color: #00d4aa;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Accordion ───────────────────────────────────────────── */
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+/* ── Number counter ──────────────────────────────────────── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
