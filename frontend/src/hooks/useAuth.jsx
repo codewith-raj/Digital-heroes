@@ -12,14 +12,14 @@ export function AuthProvider({ children }) {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
+      if (session?.user) fetchProfile(session.access_token);
       else setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
+      if (session?.user) fetchProfile(session.access_token);
       else {
         setProfile(null);
         setLoading(false);
@@ -29,17 +29,35 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  async function fetchProfile(userId) {
+  async function fetchProfile(accessToken) {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*, charities(id, name)')
-        .eq('id', userId)
-        .single();
+      // Use backend /api/auth/profile which uses service role key (bypasses RLS)
+      const res = await fetch('/api/auth/profile', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data);
+        setLoading(false);
+        return;
+      }
+    } catch (_err) {
+      // backend not reachable — fall through to direct Supabase
+    }
 
-      if (!error) setProfile(data);
+    // Fallback: direct Supabase query without join (avoids RLS join issue)
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        if (data) setProfile(data);
+      }
     } catch (err) {
-      console.error('Error fetching profile:', err);
+      console.error('Error fetching profile (fallback):', err);
     } finally {
       setLoading(false);
     }
@@ -58,7 +76,8 @@ export function AuthProvider({ children }) {
   }
 
   async function refreshProfile() {
-    if (user) await fetchProfile(user.id);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.access_token) await fetchProfile(session.access_token);
   }
 
   const value = {

@@ -121,6 +121,15 @@ export default function Login() {
               Create one free →
             </Link>
           </p>
+
+          <div className="mt-6 pt-5 border-t border-white/5 text-center">
+            <Link
+              to="/admin/login"
+              className="text-slate-600 hover:text-amber-400 text-xs transition-colors inline-flex items-center gap-1.5"
+            >
+              🛡️ Admin Panel →
+            </Link>
+          </div>
         </motion.div>
       </div>
 

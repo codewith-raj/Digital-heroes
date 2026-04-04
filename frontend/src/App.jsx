@@ -15,6 +15,7 @@ import ResetPassword from './pages/ResetPassword.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 // Admin pages
+import AdminLogin from './pages/admin/AdminLogin.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import AdminUsers from './pages/admin/AdminUsers.jsx';
 import AdminDraws from './pages/admin/AdminDraws.jsx';
@@ -45,6 +46,7 @@ function AppRoutes() {
       <Route path="/charities/:id" element={<CharityProfile />} />
       <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
 
       {/* Protected — requires auth */}
       <Route element={<ProtectedRoute />}>

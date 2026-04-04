@@ -125,4 +125,46 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// POST /api/auth/admin-setup
+// Sets admin role for the configured ADMIN_EMAIL using service role key
+// Protected by ADMIN_SETUP_SECRET to prevent abuse
+router.post('/admin-setup', async (req, res) => {
+  try {
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'ritikrajunique111@gmail.com';
+    const SECRET = process.env.ADMIN_SETUP_SECRET || 'dh_admin_setup_2024';
+
+    const { secret } = req.body;
+    if (secret !== SECRET) {
+      return res.status(403).json({ error: 'Invalid setup secret' });
+    }
+
+    // Find the user in Supabase Auth by email
+    const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+    if (listError) return res.status(500).json({ error: 'Failed to list users' });
+
+    const authUser = users.find(u => u.email === ADMIN_EMAIL);
+    if (!authUser) {
+      return res.status(404).json({ error: `No Supabase auth user found for ${ADMIN_EMAIL}. Please sign up first.` });
+    }
+
+    // Upsert the profile row with role = 'admin'
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .upsert(
+        { id: authUser.id, email: ADMIN_EMAIL, role: 'admin', name: 'Admin' },
+        { onConflict: 'id' }
+      )
+      .select()
+      .single();
+
+    if (error) return res.status(400).json({ error: error.message });
+
+    res.json({ message: `✅ Admin role assigned to ${ADMIN_EMAIL}`, user: data });
+  } catch (err) {
+    console.error('Admin setup error:', err);
+    res.status(500).json({ error: 'Failed to set admin role' });
+  }
+});
+
 module.exports = router;
+
