@@ -21,12 +21,16 @@ export default function AdminWinners() {
   async function fetchWinners() {
     setLoading(true);
     try {
-      const { data } = await adminAPI.getWinners(
-        Object.fromEntries([statusFilter && ['status', statusFilter], payoutFilter && ['payoutStatus', payoutFilter]].filter(Boolean))
-      );
-      setWinners(data || []);
+      const params = {};
+      if (statusFilter) params.status = statusFilter;
+      if (payoutFilter) params.payoutStatus = payoutFilter;
+      const { data } = await adminAPI.getWinners(params);
+      setWinners(Array.isArray(data) ? data : []);
     } catch (err) {
-      toast.error('Failed to load winners');
+      // Only show toast for real errors, not empty results
+      if (err?.response?.status !== 404) {
+        toast.error('Failed to load winners');
+      }
     } finally {
       setLoading(false);
     }

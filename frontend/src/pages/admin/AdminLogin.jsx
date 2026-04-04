@@ -85,11 +85,20 @@ export default function AdminLogin() {
             </div>
           </div>
 
-          {/* Security notice */}
-          <div className="mb-6 flex items-center gap-2.5 p-3 rounded-xl bg-white/3 border border-white/8">
-            <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-            <p className="text-slate-500 text-xs">
-              This area is protected. All access attempts are logged.
+          {/* Evaluator Credentials Note (To be removed later) */}
+          <div className="mb-6 p-4 rounded-xl bg-teal-500/10 border border-teal-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <Lock className="w-4 h-4 text-teal-400" />
+              <p className="text-teal-400 text-sm font-semibold">Demo Admin Credentials</p>
+            </div>
+            <p className="text-slate-300 text-xs font-mono mb-1">
+              Email: ritikrajunique111@gmail.com
+            </p>
+            <p className="text-slate-300 text-xs font-mono">
+              Password: pass12345@
+            </p>
+            <p className="text-teal-500/70 text-[10px] mt-2 italic">
+              Note: This is provided for evaluation purposes and will be removed later.
             </p>
           </div>
 
