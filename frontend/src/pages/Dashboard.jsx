@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Target, Heart, Trophy, Settings,
   CreditCard, LogOut, Menu, X, Plus, Pencil, Trash2,
-  ChevronRight, Calendar, Check, Upload, AlertCircle
+  ChevronRight, Calendar, Check, Upload, AlertCircle, Home, User
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { scoresAPI, drawsAPI, charitiesAPI, subscriptionsAPI, winnersAPI } from '../lib/api.js';
@@ -538,8 +538,21 @@ function WinningsTab() {
 export default function Dashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
   const { profile, loading, signOut, refreshProfile } = useAuth();
   const subStatus = useSubscription();
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const activeTab = searchParams.get('tab') || 'overview';
 
@@ -588,6 +601,10 @@ export default function Dashboard() {
               Admin Panel
             </Link>
           )}
+          <Link to="/" className="sidebar-item w-full flex items-center gap-2 text-slate-400 hover:text-white">
+            <Home className="w-5 h-5" />
+            Back to Home
+          </Link>
           <button onClick={signOut} className="sidebar-item w-full text-red-400">
             <LogOut className="w-5 h-5" />
             Sign Out
@@ -608,11 +625,76 @@ export default function Dashboard() {
           <div className="flex-1">
             <h1 className="text-white font-bold">{tabs.find(t => t.id === activeTab)?.label}</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-400 text-sm font-bold">
-              {profile?.name?.[0]?.toUpperCase() || 'U'}
-            </div>
+          <div className="flex items-center gap-3" ref={userMenuRef}>
             <span className="text-slate-400 text-sm hidden sm:block">{profile?.name || profile?.email}</span>
+            {/* User avatar button */}
+            <div className="relative">
+              <button
+                id="user-menu-btn"
+                onClick={() => setUserMenuOpen(prev => !prev)}
+                className="w-9 h-9 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-400 text-sm font-bold hover:bg-teal-500/30 hover:border-teal-400/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                aria-label="User menu"
+              >
+                {profile?.name?.[0]?.toUpperCase() || 'U'}
+              </button>
+
+              {/* Dropdown */}
+              <AnimatePresence>
+                {userMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -8 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-56 rounded-xl bg-navy-900 border border-white/10 shadow-2xl shadow-black/60 overflow-hidden z-50"
+                  >
+                    {/* Profile info */}
+                    <div className="px-4 py-3 border-b border-white/5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-400 text-sm font-bold shrink-0">
+                          {profile?.name?.[0]?.toUpperCase() || 'U'}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-white text-sm font-semibold truncate">{profile?.name || 'User'}</div>
+                          <div className="text-slate-400 text-xs truncate">{profile?.email}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Menu items */}
+                    <div className="py-1">
+                      <Link
+                        to="/"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+                      >
+                        <Home className="w-4 h-4 text-slate-400" />
+                        Back to Home
+                      </Link>
+                      {profile?.role === 'admin' && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          <Settings className="w-4 h-4 text-slate-400" />
+                          Admin Panel
+                        </Link>
+                      )}
+                      <div className="border-t border-white/5 mt-1 pt-1">
+                        <button
+                          onClick={() => { setUserMenuOpen(false); signOut(); }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </header>
 
