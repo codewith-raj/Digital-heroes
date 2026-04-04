@@ -153,13 +153,13 @@ export default function Landing() {
                 </Link>
               </motion.div>
 
-              <motion.div variants={fadeUp} className="grid grid-cols-3 gap-6">
+              <motion.div variants={fadeUp} className="flex items-center gap-0 divide-x divide-white/10">
                 {[
                   { label: 'Total Donated', value: 14200000, prefix: '₹', suffix: '+', format: true },
                   { label: 'Prize Pool', value: 520000, prefix: '₹', suffix: '' },
                   { label: 'Members', value: 2400, prefix: '', suffix: '+' },
-                ].map(({ label, value, prefix, suffix }) => (
-                  <div key={label}>
+                ].map(({ label, value, prefix, suffix }, i) => (
+                  <div key={label} className={`flex-1 ${i === 0 ? 'pr-8' : i === 2 ? 'pl-8' : 'px-8'}`}>
                     <div className="stat-value text-2xl lg:text-3xl">
                       <AnimatedCounter target={value} prefix={prefix} suffix={suffix} />
                     </div>
