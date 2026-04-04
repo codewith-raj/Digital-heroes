@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Pencil, Check, X } from 'lucide-react';
 import { adminAPI } from '../../lib/api.js';
-import { AdminSidebar } from './AdminDashboard.jsx';
+import AdminLayout from '../../components/AdminLayout.jsx';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
@@ -45,13 +45,7 @@ export default function AdminUsers() {
   const statusColors = { active: 'green', inactive: 'slate', lapsed: 'amber', cancelled: 'red' };
 
   return (
-    <div className="flex min-h-screen bg-navy-950">
-      <AdminSidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold font-display text-white">User Management</h1>
-          <p className="text-slate-400 mt-1">{total} total users</p>
-        </div>
+    <AdminLayout title="User Management" subtitle={`${total} total users`}>
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -175,7 +169,6 @@ export default function AdminUsers() {
             </motion.div>
           </div>
         )}
-      </main>
-    </div>
+    </AdminLayout>
   );
 }

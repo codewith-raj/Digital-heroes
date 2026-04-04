@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.jsx';
 import toast from 'react-hot-toast';
+import Logo from '../components/Logo.jsx';
+
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -42,9 +44,8 @@ export default function Login() {
           className="w-full max-w-md"
         >
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 mb-10">
-            <span className="text-3xl">⛳</span>
-            <span className="font-bold font-display text-white text-xl">Digital Heroes</span>
+          <Link to="/" className="flex items-center mb-10">
+            <Logo size="lg" />
           </Link>
 
           <h1 className="text-3xl font-bold font-display text-white mb-2">Welcome back</h1>
@@ -108,7 +109,13 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="text-slate-400 text-sm text-center mt-8">
+          <div className="text-center mt-5">
+            <Link to="/forgot-password" className="text-slate-500 hover:text-teal-400 text-sm transition-colors">
+              Forgot your password?
+            </Link>
+          </div>
+
+          <p className="text-slate-400 text-sm text-center mt-6">
             Don't have an account?{' '}
             <Link to="/signup" className="text-teal-400 hover:text-teal-300 font-medium transition-colors">
               Create one free →

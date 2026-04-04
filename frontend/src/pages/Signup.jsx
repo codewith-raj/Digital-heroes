@@ -4,7 +4,10 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Heart, Check } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { charitiesAPI } from '../lib/api.js';
+import api from '../lib/api.js';
 import toast from 'react-hot-toast';
+import Logo from '../components/Logo.jsx';
+
 
 const steps = ['Account', 'Charity', 'Plan'];
 
@@ -14,7 +17,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [charities, setCharities] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
@@ -37,8 +40,16 @@ export default function Signup() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await signUp({ email: form.email, password: form.password, name: form.name, charityId: form.charityId });
-      toast.success('Account created! Redirecting to dashboard...');
+      // Call backend API — uses admin.createUser() with email_confirm:true (no email verification needed)
+      await api.post('/auth/signup', {
+        email: form.email,
+        password: form.password,
+        name: form.name,
+        charityId: form.charityId || null,
+      });
+      // Auto-login immediately after account creation
+      await signIn({ email: form.email, password: form.password });
+      toast.success('Account created! Welcome to Digital Heroes 🎉');
       navigate('/dashboard');
     } catch (err) {
       toast.error(err.message || 'Failed to create account');
@@ -55,9 +66,8 @@ export default function Signup() {
         className="w-full max-w-lg"
       >
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 mb-10">
-          <span className="text-3xl">⛳</span>
-          <span className="font-bold font-display text-white text-xl">Digital Heroes</span>
+        <Link to="/" className="flex items-center mb-10">
+          <Logo size="lg" />
         </Link>
 
         {/* Progress */}

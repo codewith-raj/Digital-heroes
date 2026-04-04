@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { supabase } from './supabase.js';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// In dev: empty string → calls go through Vite proxy (/api → localhost:5000), no CORS
+// In prod: use VITE_API_URL env var
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 const api = axios.create({
-  baseURL: `${BASE_URL}/api`,
+  baseURL: BASE_URL ? `${BASE_URL}/api` : '/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -28,9 +30,13 @@ api.interceptors.response.use(
 
 // ── Auth ─────────────────────────────────────────────────────
 export const authAPI = {
-  me: () => api.get('/auth/me'),
+  getProfile: () => api.get('/auth/profile'),
+  me: () => api.get('/auth/profile'),             // alias for backward-compat
   updateProfile: (data) => api.put('/auth/profile', data),
+  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  resetPassword: (data) => api.post('/auth/reset-password', data),
 };
+
 
 // ── Scores ───────────────────────────────────────────────────
 export const scoresAPI = {
@@ -52,7 +58,7 @@ export const charitiesAPI = {
   getAll: (params) => api.get('/charities', { params }),
   getById: (id) => api.get(`/charities/${id}`),
   donate: (id, data) => api.post(`/charities/${id}/donate`, data),
-  updateUserCharity: (data) => api.put('/charities/user-selection', data),
+  updateUserCharity: (data) => api.put('/charities/my-charity', data),
 };
 
 // ── Subscriptions ─────────────────────────────────────────────

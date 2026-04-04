@@ -39,12 +39,18 @@ async function runDrawEngine(drawId, type = 'random', existingNumbers = null) {
 
   const { data: allScores } = await supabaseAdmin.from('scores').select('user_id, score, created_at');
 
+  // ── Fetch rollover amount from this draw record ───────────
+  const { data: drawRecord } = await supabaseAdmin
+    .from('draws').select('rollover_amount').eq('id', drawId).single();
+  const rolloverAmount = parseFloat(drawRecord?.rollover_amount || 0);
+
   let drawNumbers;
   if (existingNumbers && existingNumbers.length === 5) drawNumbers = existingNumbers;
   else if (type === 'algorithmic') drawNumbers = generateAlgorithmic(allScores || []);
   else drawNumbers = generateRandom();
 
-  const pool = calculatePrizePool(users.length);
+  // ── Calculate pool including any jackpot rollover ─────────
+  const pool = calculatePrizePool(users.length, rolloverAmount);
 
   await supabaseAdmin.from('prize_pools').upsert({
     draw_id: drawId, total_pool: pool.total,

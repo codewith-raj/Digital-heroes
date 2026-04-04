@@ -163,6 +163,68 @@ router.put('/charities/:id', async (req, res) => {
   }
 });
 
+router.delete('/charities/:id', async (req, res) => {
+  try {
+    // Soft-delete: deactivate the charity instead of hard-deleting
+    // (users may still reference it via FK)
+    const { data, error } = await supabaseAdmin.from('charities')
+      .update({ active: false })
+      .eq('id', req.params.id)
+      .select()
+      .single();
+    if (error) return res.status(400).json({ error: error.message });
+    if (!data) return res.status(404).json({ error: 'Charity not found' });
+    res.json({ message: 'Charity deactivated', charity: data });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete charity' });
+  }
+});
+
+// ── ADMIN SCORE MANAGEMENT ────────────────────────────────────
+router.get('/users/:userId/scores', async (req, res) => {
+  try {
+    const { data, error } = await supabaseAdmin.from('scores')
+      .select('*')
+      .eq('user_id', req.params.userId)
+      .order('created_at', { ascending: false });
+    if (error) return res.status(400).json({ error: error.message });
+    res.json(data || []);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch user scores' });
+  }
+});
+
+router.put('/users/:userId/scores', async (req, res) => {
+  try {
+    const { scores } = req.body;
+    if (!Array.isArray(scores)) return res.status(400).json({ error: 'Scores array is required' });
+
+    const results = [];
+    for (const s of scores) {
+      if (!s.id) continue;
+      const updates = {};
+      if (s.score !== undefined) {
+        const val = parseInt(s.score);
+        if (val < 1 || val > 45) continue;
+        updates.score = val;
+      }
+      if (s.played_on !== undefined) updates.played_on = s.played_on;
+      if (Object.keys(updates).length === 0) continue;
+
+      const { data, error } = await supabaseAdmin.from('scores')
+        .update(updates)
+        .eq('id', s.id)
+        .eq('user_id', req.params.userId)
+        .select()
+        .single();
+      if (!error && data) results.push(data);
+    }
+    res.json({ updated: results.length, scores: results });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update user scores' });
+  }
+});
+
 // ── WINNERS ───────────────────────────────────────────────────
 router.get('/winners', async (req, res) => {
   try {

@@ -9,6 +9,7 @@ router.post('/signup', async (req, res) => {
   try {
     const { email, password, name, charityId } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
+    if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
 
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email,
@@ -17,22 +18,31 @@ router.post('/signup', async (req, res) => {
       user_metadata: { name },
     });
 
-    if (error) return res.status(400).json({ error: error.message });
-
-    // Update profile with name and charity
-    const updates = {};
-    if (name) updates.name = name;
-    if (charityId) updates.charity_id = charityId;
-    if (Object.keys(updates).length > 0) {
-      await supabaseAdmin.from('users').update(updates).eq('id', data.user.id);
+    if (error) {
+      // Give a clear message if email already registered
+      if (error.message.includes('already been registered') || error.message.includes('already exists')) {
+        return res.status(409).json({ error: 'An account with this email already exists. Please sign in.' });
+      }
+      return res.status(400).json({ error: error.message });
     }
 
-    res.status(201).json({ user: { id: data.user.id, email: data.user.email }, message: 'Account created. Please sign in.' });
+    // UPSERT the profile row — works whether the DB trigger fired or not
+    const profileData = { id: data.user.id, email: data.user.email };
+    if (name) profileData.name = name;
+    if (charityId) profileData.charity_id = charityId;
+
+    await supabaseAdmin.from('users').upsert(profileData, { onConflict: 'id' });
+
+    res.status(201).json({
+      user: { id: data.user.id, email: data.user.email },
+      message: 'Account created successfully.',
+    });
   } catch (err) {
     console.error('Signup error:', err);
     res.status(500).json({ error: 'Failed to create account' });
   }
 });
+
 
 // GET /api/auth/profile
 router.get('/profile', requireAuth, async (req, res) => {
@@ -68,6 +78,50 @@ router.put('/profile', requireAuth, async (req, res) => {
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const redirectTo = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password`;
+    const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, { redirectTo });
+
+    // Always return success to prevent email enumeration
+    if (error) console.error('Password reset error:', error.message);
+    res.json({ message: 'If an account exists with that email, a reset link has been sent.' });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    res.status(500).json({ error: 'Failed to send reset email' });
+  }
+});
+
+// POST /api/auth/reset-password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { accessToken, newPassword } = req.body;
+    if (!accessToken || !newPassword) {
+      return res.status(400).json({ error: 'Access token and new password are required' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(accessToken);
+    if (userError || !user) {
+      return res.status(400).json({ error: 'Invalid or expired reset link' });
+    }
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(user.id, { password: newPassword });
+    if (error) return res.status(400).json({ error: error.message });
+
+    res.json({ message: 'Password updated successfully. You can now log in.' });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 });
 

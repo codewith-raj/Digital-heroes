@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Trophy, Heart, LayoutDashboard, Shield } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.jsx';
+import Logo from './Logo.jsx';
+
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -18,10 +20,8 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 inset-x-0 z-50 bg-navy-950/80 backdrop-blur-md border-b border-white/5">
       <div className="section flex items-center justify-between h-16">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl">⛳</span>
-          <span className="font-bold font-display text-white">Digital Heroes</span>
+        <Link to="/" className="flex items-center">
+          <Logo size="md" />
         </Link>
 
         {/* Desktop nav */}

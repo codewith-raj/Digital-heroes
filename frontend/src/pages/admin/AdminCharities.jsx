@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Pencil, Trash2, X, Check, Star, Eye, EyeOff } from 'lucide-react';
 import { adminAPI } from '../../lib/api.js';
-import { AdminSidebar } from './AdminDashboard.jsx';
+import AdminLayout from '../../components/AdminLayout.jsx';
 import toast from 'react-hot-toast';
 
 export default function AdminCharities() {
@@ -77,6 +77,17 @@ export default function AdminCharities() {
     }
   }
 
+  async function deleteCharity(id, name) {
+    if (!confirm(`Deactivate "${name}"? This will hide it from public view.`)) return;
+    try {
+      await adminAPI.deleteCharity(id);
+      toast.success('Charity deactivated');
+      fetchCharities();
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete charity');
+    }
+  }
+
   function addEvent() {
     if (!newEvent.title || !newEvent.date) return toast.error('Event title and date required');
     setForm(f => ({ ...f, events: [...f.events, { ...newEvent }] }));
@@ -88,14 +99,8 @@ export default function AdminCharities() {
   }
 
   return (
-    <div className="flex min-h-screen bg-navy-950">
-      <AdminSidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold font-display text-white">Charity Management</h1>
-            <p className="text-slate-400 mt-1">{charities.length} charities in system</p>
-          </div>
+    <AdminLayout title="Charity Management" subtitle={`${charities.length} charities in system`}>
+        <div className="flex items-center justify-end mb-6">
           <button onClick={startCreate} className="btn-primary">
             <Plus className="w-4 h-4" /> Add Charity
           </button>
@@ -197,12 +202,17 @@ export default function AdminCharities() {
                     className="p-2 rounded-lg text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
                     <Pencil className="w-4 h-4" />
                   </button>
+                  {c.active && (
+                    <button onClick={() => deleteCharity(c.id, c.name)}
+                      className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
-      </main>
-    </div>
+    </AdminLayout>
   );
 }

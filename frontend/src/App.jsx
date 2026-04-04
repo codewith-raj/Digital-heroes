@@ -10,6 +10,9 @@ import Signup from './pages/Signup.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Charities from './pages/Charities.jsx';
 import CharityProfile from './pages/CharityProfile.jsx';
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
@@ -40,6 +43,8 @@ function AppRoutes() {
       <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
       <Route path="/charities" element={<Charities />} />
       <Route path="/charities/:id" element={<CharityProfile />} />
+      <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Protected — requires auth */}
       <Route element={<ProtectedRoute />}>
@@ -56,8 +61,8 @@ function AppRoutes() {
         <Route path="/admin/winners" element={<AdminWinners />} />
       </Route>
 
-      {/* Catch-all */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* 404 */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

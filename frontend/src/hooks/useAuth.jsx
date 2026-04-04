@@ -45,28 +45,6 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function signUp({ email, password, name, charityId }) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { name },
-      },
-    });
-
-    if (error) throw error;
-
-    // If charity selected at signup, update profile
-    if (data.user && charityId) {
-      await supabase
-        .from('users')
-        .update({ charity_id: charityId, name })
-        .eq('id', data.user.id);
-    }
-
-    return data;
-  }
-
   async function signIn({ email, password }) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
@@ -89,7 +67,6 @@ export function AuthProvider({ children }) {
     loading,
     isAdmin: profile?.role === 'admin',
     isSubscribed: profile?.subscription_status === 'active',
-    signUp,
     signIn,
     signOut,
     refreshProfile,

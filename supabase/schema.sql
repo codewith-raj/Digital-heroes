@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS public.charity_contributions (
 -- Winner verifications
 CREATE TABLE IF NOT EXISTS public.winner_verifications (
   id             uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-  draw_entry_id  uuid REFERENCES public.draw_entries(id) ON DELETE CASCADE NOT NULL,
+  draw_entry_id  uuid REFERENCES public.draw_entries(id) ON DELETE CASCADE NOT NULL UNIQUE,
   proof_url      text,
   status         text DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
   payout_status  text DEFAULT 'pending' CHECK (payout_status IN ('pending', 'paid')),
@@ -350,3 +350,24 @@ ON CONFLICT DO NOTHING;
 -- ============================================================
 
 SELECT 'Schema created successfully! 🎉' AS status;
+
+-- ============================================================
+-- MIGRATION: Add UNIQUE constraint to winner_verifications
+-- (Safe to run on existing databases — uses DO block to check first)
+-- ============================================================
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'winner_verifications_draw_entry_id_key'
+      AND conrelid = 'public.winner_verifications'::regclass
+  ) THEN
+    ALTER TABLE public.winner_verifications
+      ADD CONSTRAINT winner_verifications_draw_entry_id_key UNIQUE (draw_entry_id);
+    RAISE NOTICE 'Added UNIQUE constraint on winner_verifications.draw_entry_id';
+  ELSE
+    RAISE NOTICE 'UNIQUE constraint already exists — skipping';
+  END IF;
+END
+$$;
+

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Play, CheckCircle, Eye, X, RefreshCw, Zap } from 'lucide-react';
 import { adminAPI } from '../../lib/api.js';
-import { AdminSidebar } from './AdminDashboard.jsx';
+import AdminLayout from '../../components/AdminLayout.jsx';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
@@ -82,14 +82,8 @@ export default function AdminDraws() {
   }
 
   return (
-    <div className="flex min-h-screen bg-navy-950">
-      <AdminSidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold font-display text-white">Draw Management</h1>
-            <p className="text-slate-400 mt-1">Configure, simulate, and publish monthly draws</p>
-          </div>
+    <AdminLayout title="Draw Management" subtitle="Configure, simulate, and publish monthly draws">
+        <div className="flex items-center justify-end mb-6">
           <button onClick={() => setCreating(true)} className="btn-primary">
             <Plus className="w-4 h-4" /> New Draw
           </button>
@@ -265,7 +259,6 @@ export default function AdminDraws() {
             </motion.div>
           </div>
         )}
-      </main>
-    </div>
+    </AdminLayout>
   );
 }

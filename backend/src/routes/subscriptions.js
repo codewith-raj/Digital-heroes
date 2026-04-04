@@ -36,6 +36,9 @@ router.post('/create-checkout', requireAuth, async (req, res) => {
       success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?subscribed=true`,
       cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/#pricing?cancelled=true`,
       metadata: { userId: req.user.id, plan },
+      subscription_data: {
+        metadata: { userId: req.user.id, plan },
+      },
     });
 
     res.json({ url: session.url });

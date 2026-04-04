@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, ExternalLink, Filter } from 'lucide-react';
 import { adminAPI } from '../../lib/api.js';
-import { AdminSidebar } from './AdminDashboard.jsx';
+import AdminLayout from '../../components/AdminLayout.jsx';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
@@ -46,13 +46,7 @@ export default function AdminWinners() {
   }
 
   return (
-    <div className="flex min-h-screen bg-navy-950">
-      <AdminSidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold font-display text-white">Winner Verifications</h1>
-          <p className="text-slate-400 mt-1">Review proof submissions and process payouts</p>
-        </div>
+    <AdminLayout title="Winner Verifications" subtitle="Review proof submissions and process payouts">
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-6">
@@ -170,7 +164,6 @@ export default function AdminWinners() {
             })}
           </div>
         )}
-      </main>
-    </div>
+    </AdminLayout>
   );
 }
