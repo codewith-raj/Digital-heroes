@@ -1,6 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase.js';
 
+// In dev: Vite proxy handles /api → localhost:5000
+// In prod: VITE_API_URL must point to the deployed backend
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -32,7 +36,7 @@ export function AuthProvider({ children }) {
   async function fetchProfile(accessToken) {
     try {
       // Use backend /api/auth/profile which uses service role key (bypasses RLS)
-      const res = await fetch('/api/auth/profile', {
+      const res = await fetch(`${API_BASE}/api/auth/profile`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (res.ok) {

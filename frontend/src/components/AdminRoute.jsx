@@ -5,9 +5,8 @@ import { Shield } from 'lucide-react';
 export default function AdminRoute() {
   const { user, profile, loading } = useAuth();
 
-  // Still loading session OR (user exists but profile not fetched yet)
-  // Wait for both to resolve before making the access decision
-  if (loading || (user && profile === null)) {
+  // Wait only while auth is being resolved; once loading=false we decide immediately
+  if (loading) {
     return (
       <div className="min-h-screen bg-navy-950 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
