@@ -1,4 +1,4 @@
-# 🏌️ Digital Heroes Golf Platform
+# 🏌️ Digital Heroes Golf Platform (SaaS)
 
 A full-stack subscription-based golf draw platform where players enter their golf scores, participate in monthly prize draws, and simultaneously contribute a portion of their subscription to a charity of their choice.
 
